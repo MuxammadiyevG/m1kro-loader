@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# $${\color{orange}M1kro-Loader-Burpsuite-Professional}$$
+# $${\color{blue}M1kro-Loader-Burpsuite-Professional}$$
 </div>
 
 <p align="center">Burp Suite Professional is the web security tester's toolkit of choice. Use it to automate repetitive testing tasks — then dig deeper with its expert-designed manual and semi-automated security testing tools. This loader activates Burp Suite Professional fully offline: a keygen generates the license and activation response, and a Java agent patches the license check in memory at runtime. The original Burp JAR is never modified, nothing is written to disk, and it never touches the network.</p>
@@ -20,7 +20,7 @@
 
 <br>
 
-#  $${\color{magenta}Requirements}$$
+#  $${\color{green}Requirements}$$
 
 The agent relies on `jdk.internal.org.objectweb.asm`, which ships only with **JDK 21 or older** (removed in JDK 22+). Burp must run on JDK 21. The keygen itself works on any JDK.
 
@@ -108,7 +108,7 @@ kbuildsycoca6 --noincremental
 
 <br>
 
-#  $${\color{magenta}macOS-Installation}$$
+#  $${\color{green}macOS-Installation}$$
 
 Install JDK 21 with Homebrew, then use the same scripts:
 
@@ -125,7 +125,7 @@ burpsuitepro
 
 <br>
 
-#  $${\color{magenta}Windows-Installation}$$
+#  $${\color{green}Windows-Installation}$$
 
 The agent and keygen work the same, but the bash scripts don't run natively — use the PowerShell launcher and make sure **JDK 21** is on your `PATH`.
 
@@ -144,13 +144,13 @@ java -jar loader.jar --name "M1kro"
 
 <br>
 
-#  $${\color{magenta}How-it-works}$$
+#  $${\color{green}How-it-works}$$
 
 When Burp verifies the RSA license signature it calls `BigInteger.oddModPow`. The agent patches that method in memory to swap PortSwigger's public modulus for the keygen's own modulus, so a license signed by the keygen looks genuine. Extra patches bypass the license-validation routine inside the `burp/` classes and fake the LicenseSpring response used by Burp Bounty Pro. All of this lives only in RAM while the agent runs — the Burp JAR on disk stays original and license-free.
 
 <br>
 
-#  $${\color{magenta}Troubleshooting}$$
+#  $${\color{green}Troubleshooting}$$
 
 | Problem | Cause | Fix |
 |--------|-------|-----|
@@ -162,6 +162,3 @@ When Burp verifies the RSA license signature it calls `BigInteger.oddModPow`. Th
 
 <br>
 
-#  $${\color{magenta}Credits}$$
-
-- Keygen / loader technique 👉 [h3110w0r1d-y/BurpLoaderKeygen](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
