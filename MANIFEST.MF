@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Can-Retransform-Classes: true
+Main-Class: com.m1kro.burploader.Main
+Premain-Class: com.m1kro.burploader.Loader
