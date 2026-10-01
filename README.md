@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="420" src="m1kro-burp.png" alt="M1kro Loader">
+  <img width="420" src="./m1kro-burp.png" alt="M1kro Loader">
 </div>
 
 <div align="center">
