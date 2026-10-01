@@ -1,4 +1,3 @@
-./build/*
-./src/*
-./test/*
+build/
+test/
 burpsuite_pro_v2026.9.jar
