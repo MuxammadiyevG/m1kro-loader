@@ -3,8 +3,34 @@
 # Must run on a JDK that still ships jdk.internal.org.objectweb.asm (JDK <= 21).
 set -euo pipefail
 
-JDK="${JDK:-/usr/lib/jvm/java-21-openjdk}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
+
+# Pick a JDK that still ships jdk.internal.org.objectweb.asm (JDK <= 21).
+# Honor an explicit $JDK; otherwise try common Linux/macOS locations.
+if [ -z "${JDK:-}" ]; then
+  for candidate in \
+    /usr/lib/jvm/java-21-openjdk \
+    /usr/lib/jvm/java-21-openjdk-amd64 \
+    /usr/lib/jvm/jdk-21 \
+    /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home \
+    /usr/local/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home \
+    /Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home; do
+    if [ -x "$candidate/bin/java" ]; then JDK="$candidate"; break; fi
+  done
+fi
+if [ -z "${JDK:-}" ] && [ -x /usr/libexec/java_home ]; then
+  JDK="$(/usr/libexec/java_home -v 21 2>/dev/null || true)"
+fi
+if [ -z "${JDK:-}" ]; then
+  if command -v java >/dev/null 2>&1; then
+    JDK="$(dirname "$(dirname "$(command -v java)")")"
+    echo "[!] JDK 21 not found in known paths; using 'java' on PATH ($JDK)." >&2
+    echo "    If you hit an asm error, install JDK 21 and re-run with JDK=/path/to/jdk-21." >&2
+  else
+    echo "No JDK found. Install JDK 21, or set JDK=/path/to/jdk-21." >&2
+    exit 1
+  fi
+fi
 AGENT="$HERE/loader.jar"
 
 # Burp jar: first arg, or $BURP_JAR, or newest burpsuite_*.jar next to this script / in CWD.

@@ -1,219 +1,167 @@
-# M1kro Loader
+<div align="center">
+  <img width="420" src="m1kro-burp.png" alt="M1kro Loader">
+</div>
 
-Burp Suite Professional uchun offline loader va keygen. Burp'ning JAR fayliga
-umuman tegmaydi — litsenziya tek. shiruvi faqat dastur ishga tushganda, xotirada
-(RAM'da) Java agent yordamida chetlab o'tiladi. Diskda hech narsa o'zgarmaydi,
-backdoor yo'q, tarmoqqa ham chiqmaydi.
+<div align="center">
 
-Ikkala ish ham bitta `loader.jar` ichida:
+# $${\color{orange}M1kro-Loader-Burpsuite-Professional}$$
+</div>
 
-- `java -jar loader.jar` — **keygen**: litsenziya va aktivatsiya javobini offline yaratadi.
-- `-javaagent:loader.jar` — **agent**: Burp ishga tushganda bytecode'ni patch qiladi.
+<p align="center">Burp Suite Professional is the web security tester's toolkit of choice. Use it to automate repetitive testing tasks — then dig deeper with its expert-designed manual and semi-automated security testing tools. This loader activates Burp Suite Professional fully offline: a keygen generates the license and activation response, and a Java agent patches the license check in memory at runtime. The original Burp JAR is never modified, nothing is written to disk, and it never touches the network.</p>
 
-> Bu yerdagi kod faqat o'rganish va tadqiqot uchun. Burp'dan tijoriy maqsadda
-> foydalanadigan bo'lsangiz, PortSwigger'dan haqiqiy litsenziya sotib oling.
+<h3 align="center">
 
----
+[Overview](https://portswigger.net/burp/pro)
+</h3>
 
-## Talablar
+<br>
 
-Agent `jdk.internal.org.objectweb.asm` paketiga tayanadi. Bu paket faqat
-**JDK 21 va undan eski** versiyalarda mavjud — JDK 22+ dan boshlab olib tashlangan.
-Shuning uchun Burp'ni albatta JDK 21 bilan ishga tushirish kerak. Keygen esa
-istalgan JDK'da ishlayveradi.
+> For educational and research use. Buy a genuine license from PortSwigger for commercial use.
 
-JDK 21 bor-yo'qligini tekshiring:
+<br>
 
-```bash
-ls /usr/lib/jvm/java-21-openjdk/bin/java
-```
+#  $${\color{magenta}Requirements}$$
 
-Agar yo'q bo'lsa, o'rnating (Arch / CachyOS):
+The agent relies on `jdk.internal.org.objectweb.asm`, which ships only with **JDK 21 or older** (removed in JDK 22+). Burp must run on JDK 21. The keygen itself works on any JDK.
 
-```bash
+```sh
+# Arch / CachyOS
 sudo pacman -S jdk21-openjdk
-```
 
-Debian / Ubuntu'da:
-
-```bash
+# Debian / Ubuntu
 sudo apt install openjdk-21-jdk
 ```
 
-JDK boshqa joyda bo'lsa, skriptlarga `JDK` o'zgaruvchisi orqali yo'lni berib yuborasiz
-(pastda misoli bor).
+<br>
 
----
+#  $${\color{magenta}Linux-Installation}$$
 
-## Boshlash
-
-Reponi klon qiling va Burp'ning JAR faylini shu papka ichiga qo'ying:
-
-```bash
+```sh
 git clone https://github.com/MuxammadiyevG/m1kro-loader.git
 cd m1kro-loader
-# burpsuite_pro_vXXXX.jar ni shu papkaga nusxalang
+# put your burpsuite_pro_vXXXX.jar into this folder
 ```
 
-`loader.jar` allaqachon tayyor holda repoda bor, shuning uchun qurish shart emas.
-Agar manbadan o'zingiz qurmoqchi bo'lsangiz:
-
-```bash
-./build.sh
-```
-
-Bu JDK 21 bilan `src/` dagi kodni kompilyatsiya qilib, yangi `loader.jar` yasaydi.
-JDK boshqa yo'lda bo'lsa:
-
-```bash
-JDK=/path/to/jdk-21 ./build.sh
-```
-
----
-
-## Burp'ni ishga tushirish
-
-Har safar Burp'ni shu skript orqali oching:
-
-```bash
+## Run
+```sh
 ./run-burp.sh ./burpsuite_pro_v2026.9.jar
 ```
+Always launch Burp through `run-burp.sh` — it picks JDK 21 and attaches the agent automatically. If you open Burp with a plain `java -jar` (no agent), you get `INVALID_LICENSE`, because the check is patched at runtime.
 
-JAR nomini bermasangiz, skript papkadagi eng yangi `burpsuite_*.jar` ni o'zi topadi:
+<br>
 
-```bash
-./run-burp.sh
+## Terminal command
+
+Install a global `burpsuitepro` command so you can launch Burp from any terminal:
+
+```sh
+./install.sh
+burpsuitepro
 ```
 
-`run-burp.sh` avtomatik ravishda JDK 21 ni tanlaydi, kerakli `--add-opens`
-bayroqlarini qo'yadi va agentni ulaydi. Agar Burp'ni oddiy `java -jar burpsuite...`
-bilan (agentsiz) ochsangiz — litsenziya ishlamaydi, `INVALID_LICENSE` chiqadi,
-chunki tekshiruv aynan runtime'da patch qilinadi.
+`install.sh` writes a small launcher to `/usr/local/bin/burpsuitepro` that calls `run-burp.sh` (JDK 21 + agent, and it auto-detects the Burp jar sitting next to it). Prefer another location? `BIN_DIR=/usr/bin ./install.sh`.
 
-Bir marta aktivatsiya qilganingizdan keyin Burp litsenziyani eslab qoladi va qayta
-so'ramaydi. Ammo baribir **har safar** agent bilan (ya'ni `run-burp.sh` orqali)
-ochish kerak.
+<br>
 
----
+## Setup License
 
-## Litsenziya va aktivatsiya (keygen)
-
-Buni faqat **birinchi marta**, yoki Burp qaytadan aktivatsiya so'raganda bajarasiz.
-
-**1. Keygen'ni alohida terminalda ishga tushiring:**
-
-```bash
+Run the keygen in a separate terminal:
+```sh
 java -jar loader.jar --name "M1kro"
 ```
 
-Keygen avval **License text** chop etadi, keyin aktivatsiya so'rovini kutib turadi.
+Note: Copy the license from the loader to Burp Suite > paste it > Next > manual activation > copy Burp's request key into the loader > copy the response key back into Burp Suite.
 
-**2. License text'ni Burp'ga joylang.** Burp oynasida litsenziya maydoniga chop
-etilgan matnni qo'ying va **Next** bosing.
+Press `Ctrl+D` to quit the keygen. Once activated, Burp remembers the license and won't ask again — but you still open it with `run-burp.sh` every time.
 
-**3. Aktivatsiya so'rovini keygen'ga bering.** Burp "manual activation" rejimiga
-o'tib, bitta uzun **activation request** matnini ko'rsatadi. O'sha matnni nusxalab,
-keygen ishlab turgan terminalga joylang va **Enter** bosing.
+<details><summary></summary>
 
-**4. Javobni Burp'ga qaytaring.** Keygen **Activation response** chop etadi. Uni
-nusxalab, Burp'dagi javob maydoniga qo'ying va tasdiqlang. Tamom — Burp aktivatsiya bo'ladi.
-
-Keygen'dan chiqish uchun **Ctrl+D**.
-
-### Tezroq variant
-
-Aktivatsiya so'rovingiz allaqachon tayyor bo'lsa, bitta qatorda:
-
-```bash
-echo "ACTIVATION_REQUEST_SHU_YERGA" | java -jar loader.jar
-```
-
-Faqat litsenziya kerak bo'lsa (aktivatsiyasiz):
-
-```bash
+## License only (no activation)
+```sh
 java -jar loader.jar --license-only --name "M1kro"
 ```
 
-Barcha bayroqlar: `-n, --name NAME` (litsenziyadagi ism, default `M1kro`),
-`--license-only` (faqat litsenziya chiqarib chiqadi), `-h, --help`.
+## One-liner activation
+```sh
+echo "ACTIVATION_REQUEST_HERE" | java -jar loader.jar
+```
 
----
+## Flags
+```
+-n, --name NAME     Name embedded in the generated license (default: M1kro)
+    --license-only  Print only the license text, then exit
+-h, --help          Show help
+```
+</details>
 
-## Doimiy qilish — menyuga qo'shish
+<br>
 
-Aktivatsiyadan keyin Burp litsenziyani `~/.java/.userPrefs/burp/prefs.xml` ichida
-(`key="license1"`) saqlaydi, shuning uchun qayta litsenziya so'ramaydi. Faqat har
-safar agent bilan ochilishi kerak.
+## Shortcut Launcher - (KDE)
 
-Buni qulaylashtirish uchun KDE/freedesktop menyusiga launcher qo'shsa bo'ladi.
-`~/.local/share/applications/m1kro-burp.desktop` fayli `run-burp.sh` ni chaqiradigan
-qilib yoziladi, keyin menyu keshi yangilanadi:
+Create an application launcher whose command is the full path to `run-burp.sh` (with the Burp JAR as its argument), and pick any Burp icon. Opening it from the menu launches Burp with JDK 21 + the agent, so the license works there too. Pin it to the taskbar to keep it handy.
 
-```bash
+```sh
+# refresh the menu cache after adding the .desktop entry
 update-desktop-database ~/.local/share/applications
-kbuildsycoca6 --noincremental   # KDE uchun
+kbuildsycoca6 --noincremental
 ```
 
-Shundan keyin menyuda **"Burp Suite Professional"** ni qidirib topasiz. Bosilganda
-avtomatik JDK 21 + agent bilan ochiladi. Taskbar'ga pin qilib qo'ysangiz, doimiy
-bo'ladi. Launcher ham o'sha `run-burp.sh` ni chaqirgani uchun litsenziya shu yerda
-ham ishlayveradi.
+<br>
 
----
+#  $${\color{magenta}macOS-Installation}$$
 
-## Qanday ishlaydi
+Install JDK 21 with Homebrew, then use the same scripts:
 
-Agent (`Loader.java`) Java Instrumentation API orqali har bir klass yuklanishidan
-oldin uni ushlab, keraklilarini qayta yozadi. Asosiy to'rtta patch bor:
-
-- **`bigint_patch`** — eng muhim qismi. Burp litsenziya imzosini RSA bilan
-  tekshirganda `BigInteger.oddModPow` chaqiriladi. Patch shu metod ichida
-  PortSwigger'ning ommaviy modulini keygen'ning moduli bilan **almashtiradi**.
-  Natijada keygen imzolagan litsenziya Burp nazarida "haqiqiy" bo'lib ko'rinadi.
-- **`burp_patch1` / `burp_patch2`** — `burp/` paketidagi yirik klasslardagi
-  litsenziya validatsiya metodini chetlab o'tadi (`Filter.BurpFilter` ga yo'naltirib
-  yoki exception bloklarini o'tkazib yuborib).
-- **`bounty_patch`** — Burp Bounty Pro kengaytmasi uchun: `feign` orqali
-  `api.licensespring.com` ga ketadigan so'rovlarning javobini soxta, "amal qiladigan"
-  litsenziya javobiga almashtiradi.
-
-Keygen tomoni (`Keygen.java`) litsenziya va aktivatsiya matnini tuzadi, ichidagi
-qattiq-kodlangan RSA kalitlari bilan imzolaydi va DES (`burpr0x!`) bilan shifrlab,
-Burp kutadigan formatga keltiradi. Hammasi offline — hech qanday socket ochilmaydi,
-fayl yozilmaydi, TLS tekshiruvi o'chirilmaydi.
-
-Eng muhimi: **Burp JAR'ining o'zi hech qachon o'zgartirilmaydi.** Barcha patchlar
-faqat agent ishlab turgan vaqtda, xotirada yashaydi. Agar Burp'ni agentsiz ochsangiz,
-u butunlay original holida, litsenziyasiz ishlaydi.
-
----
-
-## Muammolarni hal qilish
-
-| Muammo | Sabab | Yechim |
-|--------|-------|--------|
-| `INVALID_LICENSE` | Agent ulanmagan | `run-burp.sh` orqali oching, oddiy `java -jar` emas |
-| `package jdk.internal.org.objectweb.asm does not exist` | JDK 22+ ishlatilyapti | JDK 21 ga o'ting (`run-burp.sh` buni avtomatik qiladi) |
-| Burp ochilishida o'zini qayta ishga tushiradi | Normal holat — agent saqlanadi | Hech narsa qilmang |
-| Keygen chiqishida litsenziya ko'rinmaydi | Argument tartibi noto'g'ri | `--name` ni `java -jar loader.jar` dan **keyin** yozing |
-| `./build.sh` JDK topa olmaydi | JDK 21 boshqa yo'lda | `JDK=/to'g'ri/yo'l ./build.sh` |
-
----
-
-## Fayllar
-
-```
-m1kro-loader/
-├── loader.jar                 # tayyor jar (keygen + agent, ikki ish bir faylda)
-├── build.sh                   # manbadan qurish (JDK 21 kerak)
-├── run-burp.sh                # Burp'ni agent bilan ochadigan skript
-├── MANIFEST.MF                # Main-Class (keygen) + Premain-Class (agent)
-└── src/com/m1kro/burploader/
-    ├── Main.java              # keygen CLI (argumentlar, stdin/stdout)
-    ├── Keygen.java            # offline litsenziya/aktivatsiya generatori
-    ├── Loader.java            # Java agent — bytecode patcher
-    └── Filter.java            # patch ichidan chaqiriladigan yordamchi mantiq
+```sh
+brew install openjdk@21
+git clone https://github.com/MuxammadiyevG/m1kro-loader.git
+cd m1kro-loader
+# put your burpsuite_pro_vXXXX.jar here
+./install.sh        # adds the global `burpsuitepro` command
+burpsuitepro
 ```
 
-`burpsuite_pro_v2026.9.jar` repoga kiritilmagan (hajmi katta, `.gitignore`da) —
-uni o'zingiz qo'shasiz.
+`run-burp.sh` auto-detects the Homebrew JDK 21, or run it explicitly with `JDK=$(/usr/libexec/java_home -v 21) ./run-burp.sh`. The keygen is identical: `java -jar loader.jar --name "M1kro"`.
+
+<br>
+
+#  $${\color{magenta}Windows-Installation}$$
+
+The agent and keygen work the same, but the bash scripts don't run natively — use the PowerShell launcher and make sure **JDK 21** is on your `PATH`.
+
+```powershell
+# in the m1kro-loader folder, in PowerShell
+.\run-burp.ps1 .\burpsuite_pro_v2026.9.jar
+```
+
+Keygen:
+
+```powershell
+java -jar loader.jar --name "M1kro"
+```
+
+> Simplest alternative: run the Linux steps inside **WSL**. The PowerShell launcher assumes `java` is JDK 21; otherwise set `$env:JDK` to a JDK 21 home.
+
+<br>
+
+#  $${\color{magenta}How-it-works}$$
+
+When Burp verifies the RSA license signature it calls `BigInteger.oddModPow`. The agent patches that method in memory to swap PortSwigger's public modulus for the keygen's own modulus, so a license signed by the keygen looks genuine. Extra patches bypass the license-validation routine inside the `burp/` classes and fake the LicenseSpring response used by Burp Bounty Pro. All of this lives only in RAM while the agent runs — the Burp JAR on disk stays original and license-free.
+
+<br>
+
+#  $${\color{magenta}Troubleshooting}$$
+
+| Problem | Cause | Fix |
+|--------|-------|-----|
+| `burpsuitepro: command not found` | Command not installed / not on PATH | Run `./install.sh`, then open a new terminal |
+| `INVALID_LICENSE` | Agent not attached | Open via `run-burp.sh`, not plain `java -jar` |
+| `package jdk.internal.org.objectweb.asm does not exist` | JDK 22+ in use | Use JDK 21 (`run-burp.sh` does this automatically) |
+| Burp restarts itself on launch | Normal — the agent persists | Do nothing |
+| Keygen prints no license | Wrong argument order | Put `--name` *after* `java -jar loader.jar` |
+
+<br>
+
+#  $${\color{magenta}Credits}$$
+
+- Keygen / loader technique 👉 [h3110w0r1d-y/BurpLoaderKeygen](https://github.com/h3110w0r1d-y/BurpLoaderKeygen)
